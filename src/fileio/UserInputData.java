@@ -1,6 +1,7 @@
 package fileio;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -51,6 +52,34 @@ public final class UserInputData {
         return favoriteMovies;
     }
 
+    public boolean CheckSeen (Map<String, Integer> history, String title) {
+        Iterator<Map.Entry<String, Integer>> iterator = history.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, Integer> entry = iterator.next();
+            if (entry.getKey().equals(title)) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    public boolean CheckFavoriteExistence (ArrayList<String> favorites, String title) {
+        for (int i = 0; i < favorites.size(); i++) {
+            String ItemToCheck = favorites.get(i);
+            if (ItemToCheck.equals(title)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void AddToFavorites (ArrayList<String> favorites, String title) {
+        favorites.add(title);
+    }
     @Override
     public String toString() {
         return "UserInputData{" + "username='"

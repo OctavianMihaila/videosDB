@@ -67,4 +67,15 @@ public final class Input {
     public List<SerialInputData> getSerials() {
         return serialsData;
     }
+
+    public static UserInputData FindUser(List<UserInputData> usersData, String username) {
+        for (int i = 0; i < usersData.size(); i++) {
+            UserInputData user = usersData.get(i);
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+
+        return null;
+    }
 }

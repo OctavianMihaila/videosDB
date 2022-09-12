@@ -1,11 +1,14 @@
 package checker;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Objects;
 
 /**
  * DO NOT MODIFY
  * The class that contains the id and message of each QueryTest
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class QueryTest {
     /**
      * id of the action
