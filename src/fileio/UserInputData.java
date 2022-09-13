@@ -3,6 +3,7 @@ package fileio;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Information about an user, retrieved from parsing the input test files
@@ -27,6 +28,8 @@ public final class UserInputData {
      */
     private final ArrayList<String> favoriteMovies;
 
+    private Integer NrEvaluations;
+
     public UserInputData(final String username, final String subscriptionType,
                          final Map<String, Integer> history,
                          final ArrayList<String> favoriteMovies) {
@@ -34,6 +37,7 @@ public final class UserInputData {
         this.subscriptionType = subscriptionType;
         this.favoriteMovies = favoriteMovies;
         this.history = history;
+        this.NrEvaluations = 0; // default value;
     }
 
     public String getUsername() {
@@ -52,6 +56,8 @@ public final class UserInputData {
         return favoriteMovies;
     }
 
+    public Integer getNrEvaluations() { return NrEvaluations; }
+
     public boolean CheckSeen (Map<String, Integer> history, String title) {
         Iterator<Map.Entry<String, Integer>> iterator = history.entrySet().iterator();
 
@@ -64,6 +70,11 @@ public final class UserInputData {
 
         return false;
 
+    }
+
+    public Integer View (Map<String, Integer> history, String title) {
+        history.merge(title, 1, Integer::sum);
+        return history.get(title);
     }
 
     public boolean CheckFavoriteExistence (ArrayList<String> favorites, String title) {
@@ -87,5 +98,9 @@ public final class UserInputData {
                 + subscriptionType + '\'' + ", history="
                 + history + ", favoriteMovies="
                 + favoriteMovies + '}';
+    }
+
+    public void IncrementNrEvaluation(UserInputData user) {
+        user.NrEvaluations++;
     }
 }

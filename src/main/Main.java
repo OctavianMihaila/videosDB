@@ -72,16 +72,15 @@ public final class Main {
         InputLoader inputLoader = new InputLoader(filePath1);
         Input input = inputLoader.readData();
 
-        //Writer fileWriter = new Writer(filePath2);
         // Creating a default JSON obj that will be updated later for every action.
         JSONArray arrayResult = new JSONArray();
 
         // ENTRY POINT to a PROCESS CLASS
 
-        //System.out.println("TEST");
-
         List<ActionInputData> commands = input.getCommands();
         List<UserInputData> users = input.getUsers();
+        List<MovieInputData> movies = input.getMovies();
+        List<SerialInputData> series = input.getSerials();
 
         for (int i = 0 ; i < commands.size(); i++) {
 
@@ -89,18 +88,20 @@ public final class Main {
 
             switch (command.getActionType()) {
                 case "command":
-                JSONObject NewConfirmation = TypeProcessing.CommandProcessing(command, users);
-                arrayResult.add(NewConfirmation);
+                    JSONObject NewConfirmation = TypeProcessing.CommandProcessing(command, users, movies, series);
+                    arrayResult.add(NewConfirmation);
+                    break;
                 case "query":
                     // to do
+                    break;
 
                 case "recommendation":
                     // to do
+                    break;
 
                 default:
-                    // Some error print
+                    throw new IllegalArgumentException("Invalid request");
             }
-            //System.out.println(command.getActionId());
 
         }
 
@@ -113,6 +114,5 @@ public final class Main {
 
         //TODO add here the entry point to your implementation
 
-        //fileWriter.closeJSON(arrayResult);
     }
 }

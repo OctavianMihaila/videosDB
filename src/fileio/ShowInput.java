@@ -25,12 +25,18 @@ public abstract class ShowInput {
      */
     private final ArrayList<String> genres;
 
+    /**
+     * Rating from users
+     */
+    private Double grade;
+
     public ShowInput(final String title, final int year,
                      final ArrayList<String> cast, final ArrayList<String> genres) {
         this.title = title;
         this.year = year;
         this.cast = cast;
         this.genres = genres;
+        this.grade = Double.valueOf(0); // default value
     }
 
     public final String getTitle() {
@@ -47,5 +53,12 @@ public abstract class ShowInput {
 
     public final ArrayList<String> getGenres() {
         return genres;
+    }
+
+    public final Double getGrade() {
+        return grade;
+    }
+    public final void UpdateGrade(Double NewGrade) {
+        this.grade = NewGrade;
     }
 }
