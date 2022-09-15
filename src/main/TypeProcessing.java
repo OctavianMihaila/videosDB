@@ -4,6 +4,8 @@ import fileio.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -62,5 +64,33 @@ public class TypeProcessing {
         }
 
         return confirmation;
+    }
+
+    public static JSONObject QueryProcessing(ActionInputData request, List<ActorInputData> actors,
+                                             List<MovieInputData> movies, List<SerialInputData> series) {
+        JSONObject confirmation = new JSONObject();
+        confirmation.put("id", request.getActionId());
+
+        switch(request.getObjectType()) {
+            case "actors":
+                ArrayList<String> ActorsNames = ActorsQuery.CriteriaProcessing(request, actors, movies, series);
+                confirmation.put("message", "Query result: " + ActorsNames);
+                break;
+
+            case "movies":
+                break;
+
+            case "shows":
+                break;
+
+            case "users":
+                break;
+
+            default:
+                throw new IllegalArgumentException("Invalid action type");
+        }
+
+        return confirmation;
+
     }
 }

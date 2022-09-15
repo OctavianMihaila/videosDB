@@ -74,6 +74,7 @@ public final class Main {
 
         // Creating a default JSON obj that will be updated later for every action.
         JSONArray arrayResult = new JSONArray();
+        JSONObject NewConfirmation;
 
         // ENTRY POINT to a PROCESS CLASS
 
@@ -81,6 +82,7 @@ public final class Main {
         List<UserInputData> users = input.getUsers();
         List<MovieInputData> movies = input.getMovies();
         List<SerialInputData> series = input.getSerials();
+        List<ActorInputData> actors = input.getActors();
 
         for (int i = 0 ; i < commands.size(); i++) {
 
@@ -88,11 +90,12 @@ public final class Main {
 
             switch (command.getActionType()) {
                 case "command":
-                    JSONObject NewConfirmation = TypeProcessing.CommandProcessing(command, users, movies, series);
+                    NewConfirmation = TypeProcessing.CommandProcessing(command, users, movies, series);
                     arrayResult.add(NewConfirmation);
                     break;
                 case "query":
-                    // to do
+                    NewConfirmation = TypeProcessing.QueryProcessing(command, actors, movies, series);
+                    arrayResult.add(NewConfirmation);
                     break;
 
                 case "recommendation":

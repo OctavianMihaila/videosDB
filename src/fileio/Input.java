@@ -1,5 +1,6 @@
 package fileio;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -77,5 +78,17 @@ public final class Input {
         }
 
         return null;
+    }
+
+    /**
+     * Updates the average rating for all the actors
+     */
+    public static void UpdateActorsRatings(List<ActorInputData> actors, List<MovieInputData> movies, List<SerialInputData> series) {
+        for (int i = 0; i < actors.size(); i++) {
+            ActorInputData actor = actors.get(i);
+            Double NewAverage = actor.CalculateRatingAverage(actor, movies, series);
+            actor.UpdateRatingAverage(NewAverage);
+        }
+
     }
 }
