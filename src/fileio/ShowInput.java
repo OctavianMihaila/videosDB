@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * <p>
  * DO NOT MODIFY
  */
-public abstract class ShowInput {
+public abstract class ShowInput<T, R, S> {
     /**
      * Show's title
      */
@@ -30,6 +30,11 @@ public abstract class ShowInput {
      */
     private Double grade;
 
+    /**
+     * Counts the number of appearances in users favorite list for a video
+     */
+    private Integer Nrappearances;
+
     public ShowInput(final String title, final int year,
                      final ArrayList<String> cast, final ArrayList<String> genres) {
         this.title = title;
@@ -37,6 +42,7 @@ public abstract class ShowInput {
         this.cast = cast;
         this.genres = genres;
         this.grade = Double.valueOf(0); // default value
+        this.Nrappearances = 0; // default value
     }
 
     public final String getTitle() {
@@ -58,7 +64,25 @@ public abstract class ShowInput {
     public final Double getGrade() {
         return grade;
     }
+
+    public final Integer getNrappearances() {
+        return Nrappearances;
+    }
     public final void UpdateGrade(Double NewGrade) {
         this.grade = NewGrade;
     }
+
+    public final void UpdateNrappearances(Integer NewNrappearances) {
+        this.Nrappearances = NewNrappearances;
+    }
+
+    /**
+     * Calculates number of appearances for a video in favorite lists of users.
+     */
+    public abstract void CalculateNrappearances(T t, R r);
+
+    /**
+     * Sorting a list of videos based on Nrappearances.
+     */
+    public abstract void SortByNrAppearances(T t, S s);
 }

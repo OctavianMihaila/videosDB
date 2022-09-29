@@ -94,7 +94,7 @@ public final class Main {
                     arrayResult.add(NewConfirmation);
                     break;
                 case "query":
-                    NewConfirmation = TypeProcessing.QueryProcessing(command, actors, movies, series);
+                    NewConfirmation = TypeProcessing.QueryProcessing(command, actors, movies, series, users);
                     arrayResult.add(NewConfirmation);
                     break;
 

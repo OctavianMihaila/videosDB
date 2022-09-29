@@ -67,29 +67,34 @@ public class TypeProcessing {
     }
 
     public static JSONObject QueryProcessing(ActionInputData request, List<ActorInputData> actors,
-                                             List<MovieInputData> movies, List<SerialInputData> series) {
+                                             List<MovieInputData> movies, List<SerialInputData> series,
+                                             List<UserInputData> users) {
         JSONObject confirmation = new JSONObject();
         confirmation.put("id", request.getActionId());
+        ArrayList<String> ActorsNames;
 
         switch(request.getObjectType()) {
             case "actors":
-                ArrayList<String> ActorsNames = ActorsQuery.CriteriaProcessing(request, actors, movies, series);
-                confirmation.put("message", "Query result: " + ActorsNames);
+                ActorsNames = ActorsQuery.CriteriaProcessing(request, actors, movies, series);
                 break;
 
             case "movies":
+                ActorsNames = MoviesShowsQuery.CriteriaProcessingMovies(request, movies, users);
                 break;
 
             case "shows":
+                ActorsNames = MoviesShowsQuery.CriteriaProcessingShows(request, series, users);
                 break;
 
             case "users":
+                ActorsNames = null;
                 break;
 
             default:
                 throw new IllegalArgumentException("Invalid action type");
         }
 
+        confirmation.put("message", "Query result: " + ActorsNames);
         return confirmation;
 
     }
