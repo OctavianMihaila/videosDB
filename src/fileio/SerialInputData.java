@@ -2,10 +2,7 @@ package fileio;
 
 import entertainment.Season;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Information about a tv show, retrieved from parsing the input test files
@@ -80,18 +77,28 @@ public final class SerialInputData extends ShowInput<List<SerialInputData>, List
      * Also, selecting only those series that have been received at least one evaluation.
      */
     public static List<SerialInputData> SelectSeries(List<SerialInputData> series, String year, String genre, boolean Graded) {
-        List<SerialInputData> SelectedSeries = new ArrayList<SerialInputData>();
+        List<SerialInputData> SelectedSeriesGraded = new ArrayList<SerialInputData>();
+        List<SerialInputData> SelectedSeriesNotGraded = new ArrayList<SerialInputData>();
         for (int i = 0; i < series.size(); i++) {
             SerialInputData show = series.get(i);
             if (Graded &&
                     show.getGenres().contains(genre) &&
                     year != null &&
                     show.getYear() == Integer.parseInt(year)) {
-                SelectedSeries.add(show);
+                SelectedSeriesGraded.add(show);
+            }
+            if (show.getGenres().contains(genre) &&
+                    year != null &&
+                    show.getYear() == Integer.parseInt(year)) {
+                SelectedSeriesNotGraded.add(show);
             }
         }
-
-        return SelectedSeries;
+        if (Graded) {
+            return SelectedSeriesGraded;
+        }
+        else {
+            return SelectedSeriesNotGraded;
+        }
     }
 
     /**
@@ -110,11 +117,17 @@ public final class SerialInputData extends ShowInput<List<SerialInputData>, List
 
     /**
      * Building a list with names of first N Series from sorted list received as parameter.
+     * views -> Corner case: don't want to select movies with 0 views for most viewd query.
      */
-    public static ArrayList<String> getNames(List<SerialInputData> series, Integer N) {
+    public static ArrayList<String> getNames(List<SerialInputData> series, Integer N, boolean views) {
         ArrayList<String> names = new ArrayList<String>();
         for (int i = 0; i < N && i < series.size(); i++) {
-            names.add(series.get(i).getTitle());
+            if (views && series.get(i).getNrViews() == 0) {
+                continue;
+            }
+            else {
+                names.add(series.get(i).getTitle());
+            }
         }
 
         return names;
@@ -154,8 +167,32 @@ public final class SerialInputData extends ShowInput<List<SerialInputData>, List
         }
     }
 
+    public static void CalculateViews(List<SerialInputData> series, List<UserInputData> users) {
+        for (int i = 0; i < series.size(); i++) {
+            Integer NrViews = 0;
+            SerialInputData serial = series.get(i);
+            for (int j = 0; j < users.size(); j++) {
+                Map<String, Integer> history = users.get(j).getHistory();
+                for (Map.Entry<String, Integer> entry : history.entrySet()) {
+                    if (entry.getKey().equals(serial.getTitle())) {
+                        NrViews += entry.getValue();
+                    }
+                }
+            }
+            serial.UpdateNrViews(NrViews);
+        }
+    }
+
     public static void SortByDuration(List<SerialInputData> series, String order) {
         Collections.sort(series, Comparator.comparing(SerialInputData::getDuration));
+
+        if (order.equals("desc")) {
+            Collections.reverse(series);
+        }
+    }
+
+    public static void SortByNrViews(List<SerialInputData> series, String order) {
+        Collections.sort(series, Comparator.comparing(SerialInputData::getNrViews));
 
         if (order.equals("desc")) {
             Collections.reverse(series);

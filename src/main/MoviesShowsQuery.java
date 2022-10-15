@@ -10,16 +10,18 @@ public class MoviesShowsQuery {
                                                              List<MovieInputData> movies, List<UserInputData> users) {
         ArrayList<String> MovieNames = new ArrayList<String>();
         List<MovieInputData> SortedMovies;
+        List<MovieInputData> SelectedMovies;
+
 
         switch (request.getCriteria()) {
             case "ratings":
                 // Select movies that verify genre, year and rating != 0
                 // Sort ASC / DESC
                 // Get title for first N of these movies.
-                List<MovieInputData> SelectedMovies = MovieInputData.SelectMovies(
+                SelectedMovies = MovieInputData.SelectMovies(
                         movies, request.getFilters().get(0).get(0), request.getFilters().get(1).get(0), false);
                 SortedMovies = MovieInputData.SortMovies(SelectedMovies, request.getSortType());
-                MovieNames = MovieInputData.getNames(SortedMovies, request.getNumber());
+                MovieNames = MovieInputData.getNames(SortedMovies, request.getNumber(), false);
 
                 // NOT TESTED but looks good
 
@@ -30,15 +32,10 @@ public class MoviesShowsQuery {
                     MovieInputData instance = movies.get(0);
                     movies = MovieInputData.SelectMovies(movies, request.getFilters().get(0).get(0),
                             request.getFilters().get(1).get(0), true);
-                    System.out.println("-----------");
-                    System.out.println(request.getActionId());
-                    for (int i = 0; i < movies.size(); i++) {
-                        System.out.println(movies.get(i).getTitle());
-                    }
                     instance.CalculateNrappearances(movies, users);
                     instance.SortByNrAppearances(movies, request.getSortType());
 
-                    MovieNames = MovieInputData.getNames(movies, request.getNumber());
+                    MovieNames = MovieInputData.getNames(movies, request.getNumber(), false);
                 }
 
                 // NOT TESTED
@@ -48,10 +45,20 @@ public class MoviesShowsQuery {
                 movies = MovieInputData.SelectMovies(movies, request.getFilters().get(0).get(0),
                         request.getFilters().get(1).get(0), true);
                 MovieInputData.SortByDuration(movies, request.getSortType());
-                MovieNames = MovieInputData.getNames(movies, request.getNumber());
+                MovieNames = MovieInputData.getNames(movies, request.getNumber(), false);
                 break;
 
             case "most_viewed":
+                SelectedMovies = MovieInputData.SelectMovies(movies, request.getFilters().get(0).get(0),
+                        request.getFilters().get(1).get(0), false);
+
+                MovieInputData.CalculateViews(SelectedMovies, users);
+                MovieInputData.SortByNrviews(SelectedMovies, request.getSortType());
+                System.out.println(">>");
+                for (int i = 0; i < SelectedMovies.size(); i++) {
+                    System.out.println(SelectedMovies.get(i).getTitle());
+                }
+                MovieNames = MovieInputData.getNames(SelectedMovies, request.getNumber(), true);
                 break;
 
             default:
@@ -74,7 +81,7 @@ public class MoviesShowsQuery {
                 List<SerialInputData> SelectedSeries = SerialInputData.SelectSeries(series,
                         request.getFilters().get(0).get(0), request.getFilters().get(1).get(0), false);
                 SortedSeries = SerialInputData.SortSeries(SelectedSeries, request.getSortType());
-                SerialNames = SerialInputData.getNames(SortedSeries, request.getNumber());
+                SerialNames = SerialInputData.getNames(SortedSeries, request.getNumber(), false);
                 // NOT TESTED but looks good
 
                 break;
@@ -86,7 +93,7 @@ public class MoviesShowsQuery {
                             request.getFilters().get(1).get(0), true);
                     instance.CalculateNrappearances(series, users);
                     instance.SortByNrAppearances(series, request.getSortType());
-                    SerialNames = SerialInputData.getNames(series, request.getNumber());
+                    SerialNames = SerialInputData.getNames(series, request.getNumber(), false);
                 }
                 // NOT TESTED
 
@@ -97,10 +104,15 @@ public class MoviesShowsQuery {
                         request.getFilters().get(1).get(0), true);
                 SerialInputData.CalculateDuration(series);
                 SerialInputData.SortByDuration(series, request.getSortType());
-                SerialNames = SerialInputData.getNames(series, request.getNumber());
+                SerialNames = SerialInputData.getNames(series, request.getNumber(), false);
                 break;
 
             case "most_viewed":
+                SelectedSeries = SerialInputData.SelectSeries(series,
+                        request.getFilters().get(0).get(0), request.getFilters().get(1).get(0), false);
+                SerialInputData.CalculateViews(SelectedSeries, users);
+                SerialInputData.SortByNrViews(SelectedSeries, request.getSortType());
+                SerialNames = SerialInputData.getNames(SelectedSeries, request.getNumber(), true);
                 break;
 
             default:

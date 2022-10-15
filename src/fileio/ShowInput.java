@@ -35,6 +35,11 @@ public abstract class ShowInput<T, R, S> {
      */
     private Integer Nrappearances;
 
+    /**
+     * Counts the number of views for each show
+     */
+    private Integer NrViews;
+
     public ShowInput(final String title, final int year,
                      final ArrayList<String> cast, final ArrayList<String> genres) {
         this.title = title;
@@ -43,6 +48,7 @@ public abstract class ShowInput<T, R, S> {
         this.genres = genres;
         this.grade = Double.valueOf(0); // default value
         this.Nrappearances = 0; // default value
+        this.NrViews = 0; // default value
     }
 
     public final String getTitle() {
@@ -68,12 +74,20 @@ public abstract class ShowInput<T, R, S> {
     public final Integer getNrappearances() {
         return Nrappearances;
     }
+
+    public final Integer getNrViews() {
+        return NrViews;
+    }
     public final void UpdateGrade(Double NewGrade) {
         this.grade = NewGrade;
     }
 
     public final void UpdateNrappearances(Integer NewNrappearances) {
         this.Nrappearances = NewNrappearances;
+    }
+
+    public final void UpdateNrViews(Integer NewNrViews) {
+        this.NrViews = NewNrViews;
     }
 
     /**
