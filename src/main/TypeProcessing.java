@@ -57,6 +57,9 @@ public class TypeProcessing {
 
                     confirmation.put("message", "success -> " + title + " was rated with " + command.getGrade() + " by " + username);
                 }
+                else {
+                    confirmation.put("message", "error -> " + title + " is not seen");
+                }
                 break;
 
             default:
@@ -87,7 +90,7 @@ public class TypeProcessing {
                 break;
 
             case "users":
-                ActorsNames = null;
+                ActorsNames = UsersQuery.FindMostActiveUsers(request, users);
                 break;
 
             default:

@@ -1,9 +1,6 @@
 package fileio;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Information about an user, retrieved from parsing the input test files
@@ -58,6 +55,17 @@ public final class UserInputData {
 
     public Integer getNrEvaluations() { return NrEvaluations; }
 
+    public static ArrayList<String> getNames(List<UserInputData> users, Integer N) {
+        ArrayList<String> names = new ArrayList<String>();
+        for (int i = 0; i < N && i < users.size(); i++) {
+            if (users.get(i).getNrEvaluations() != 0) {
+                names.add(users.get(i).getUsername());
+            }
+        }
+
+        return names;
+
+    }
     public boolean CheckSeen (Map<String, Integer> history, String title) {
         Iterator<Map.Entry<String, Integer>> iterator = history.entrySet().iterator();
 
@@ -72,11 +80,6 @@ public final class UserInputData {
 
     }
 
-    public Integer View (Map<String, Integer> history, String title) {
-        history.merge(title, 1, Integer::sum);
-        return history.get(title);
-    }
-
     public boolean CheckFavoriteExistence (ArrayList<String> favorites, String title) {
         for (int i = 0; i < favorites.size(); i++) {
             String ItemToCheck = favorites.get(i);
@@ -88,8 +91,21 @@ public final class UserInputData {
         return false;
     }
 
+    public static void SortByNrEvaluation(List<UserInputData> users, String order) {
+        Collections.sort(users, Comparator.comparing(UserInputData::getNrEvaluations));
+
+        if (order.equals("desc")) {
+            Collections.reverse(users);
+        }
+    }
+
     public void AddToFavorites (ArrayList<String> favorites, String title) {
         favorites.add(title);
+    }
+
+    public Integer View (Map<String, Integer> history, String title) {
+        history.merge(title, 1, Integer::sum);
+        return history.get(title);
     }
     @Override
     public String toString() {
