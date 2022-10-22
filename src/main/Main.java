@@ -91,20 +91,20 @@ public final class Main {
             switch (command.getActionType()) {
                 case "command":
                     NewConfirmation = TypeProcessing.CommandProcessing(command, users, movies, series);
-                    arrayResult.add(NewConfirmation);
                     break;
                 case "query":
                     NewConfirmation = TypeProcessing.QueryProcessing(command, actors, movies, series, users);
-                    arrayResult.add(NewConfirmation);
                     break;
 
                 case "recommendation":
-                    // to do
+                    NewConfirmation = TypeProcessing.RecommendationProcessing(command, actors, movies, series, users);
                     break;
 
                 default:
                     throw new IllegalArgumentException("Invalid request");
             }
+
+            arrayResult.add(NewConfirmation);
 
         }
 

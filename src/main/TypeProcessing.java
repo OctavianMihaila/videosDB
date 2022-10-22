@@ -1,12 +1,9 @@
 package main;
 
 import fileio.*;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -100,5 +97,40 @@ public class TypeProcessing {
         confirmation.put("message", "Query result: " + ActorsNames);
         return confirmation;
 
+    }
+
+    public static JSONObject RecommendationProcessing(ActionInputData request, List<ActorInputData> actors,
+                                                      List<MovieInputData> movies, List<SerialInputData> series,
+                                                      List<UserInputData> users) {
+        JSONObject confirmation = new JSONObject();
+        confirmation.put("id", request.getActionId());
+        ArrayList<String> VideosTitles;
+        String title;
+
+        switch (request.getType()) {
+            case "best_unseen":
+                title = AllUsersRecommendation.BestUnseenRecommendation(request, movies, users);
+                confirmation.put("message", "BestRatedUnseenRecommendation result: " + title);
+                break;
+
+            case "favorite":
+                VideosTitles = null;
+                break;
+
+            case "popular":
+                VideosTitles = null;
+                break;
+
+            case "search":
+                VideosTitles = null;
+                break;
+
+            case "standard":
+                title = AllUsersRecommendation.StandardRecommendation(request, movies, users);
+                confirmation.put("message", "StandardRecommendation result: " + title);
+                break;
+        }
+
+        return confirmation;
     }
 }

@@ -55,6 +55,19 @@ public final class UserInputData {
 
     public Integer getNrEvaluations() { return NrEvaluations; }
 
+    /**
+     * Returns a user with a specific username.
+     */
+    public static UserInputData getUser(List<UserInputData> users, String username) {
+        for (UserInputData user: users) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+
+        return null;
+    }
+
     public static ArrayList<String> getNames(List<UserInputData> users, Integer N) {
         ArrayList<String> names = new ArrayList<String>();
         for (int i = 0; i < N && i < users.size(); i++) {

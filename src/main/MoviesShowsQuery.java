@@ -20,7 +20,7 @@ public class MoviesShowsQuery {
                 // Get title for first N of these movies.
                 SelectedMovies = MovieInputData.SelectMovies(
                         movies, request.getFilters().get(0).get(0), request.getFilters().get(1).get(0), false);
-                SortedMovies = MovieInputData.SortMovies(SelectedMovies, request.getSortType());
+                SortedMovies = MovieInputData.SortMoviesByRating(SelectedMovies, request.getSortType());
                 MovieNames = MovieInputData.getNames(SortedMovies, request.getNumber(), false);
 
                 // NOT TESTED but looks good
@@ -54,10 +54,6 @@ public class MoviesShowsQuery {
 
                 MovieInputData.CalculateViews(SelectedMovies, users);
                 MovieInputData.SortByNrviews(SelectedMovies, request.getSortType());
-                System.out.println(">>");
-                for (int i = 0; i < SelectedMovies.size(); i++) {
-                    System.out.println(SelectedMovies.get(i).getTitle());
-                }
                 MovieNames = MovieInputData.getNames(SelectedMovies, request.getNumber(), true);
                 break;
 

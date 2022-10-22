@@ -1,7 +1,5 @@
 package fileio;
 
-import org.w3c.dom.ls.LSException;
-
 import java.util.*;
 
 /**
@@ -87,7 +85,7 @@ public final class MovieInputData extends ShowInput<List<MovieInputData>, List<U
     /**
      * Sorting a list of movies based on rating and the required order.
      */
-    public static List<MovieInputData> SortMovies(List<MovieInputData> movies, String order) {
+    public static List<MovieInputData> SortMoviesByRating(List<MovieInputData> movies, String order) {
         Collections.sort(movies, Comparator.comparing(MovieInputData::getGrade));
 
         if (order.equals("desc")) {
