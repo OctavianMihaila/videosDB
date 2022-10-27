@@ -1,13 +1,14 @@
 package fileio;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * General information about show (video), retrieved from parsing the input test files
  * <p>
  * DO NOT MODIFY
  */
-public abstract class ShowInput<T, R, S> {
+public abstract class ShowInput<T, R, S, U, W> {
     /**
      * Show's title
      */
@@ -99,4 +100,15 @@ public abstract class ShowInput<T, R, S> {
      * Sorting a list of videos based on Nrappearances.
      */
     public abstract void SortByNrAppearances(T t, S s);
+
+    /**
+     * Returns a video with a specific name.
+     */
+    public abstract U getVideo(S s, T t);
+
+    /**
+     *  Looking for the first movie/show that has the Popular genre
+     *  but does not appear in the user's history.
+     */
+    public abstract S FindFirstUnseen(T t, W w, S s);
 }

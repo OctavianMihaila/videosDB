@@ -9,7 +9,8 @@ import java.util.*;
  * <p>
  * DO NOT MODIFY
  */
-public final class SerialInputData extends ShowInput<List<SerialInputData>, List<UserInputData>, String> {
+public final class SerialInputData extends ShowInput<List<SerialInputData>, List<UserInputData>,
+                                                    String, SerialInputData, UserInputData> {
     /**
      * Number of seasons
      */
@@ -46,6 +47,16 @@ public final class SerialInputData extends ShowInput<List<SerialInputData>, List
     public void setDuration(int NewDuration) {
         this.duration = NewDuration;
     }
+    @Override
+    public SerialInputData getVideo(String title, List<SerialInputData> series) {
+        for (SerialInputData show: series) {
+            if (show.getTitle().equals(title)) {
+                return show;
+            }
+        }
+
+        return null;
+    }
 
     public static SerialInputData FindSeries(List<SerialInputData> series, String title) {
         for (int i = 0; i < series.size(); i++) {
@@ -55,6 +66,20 @@ public final class SerialInputData extends ShowInput<List<SerialInputData>, List
         }
 
         return null;
+    }
+
+    /**
+     * Checking if a show has genre in its list of genres
+     */
+    public boolean CheckGenre(SerialInputData show, String genre) {
+        ArrayList<String> ShowGenres = show.getGenres();
+        for (String ShowGenre: ShowGenres) {
+            if (ShowGenre.equals(genre)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -81,14 +106,12 @@ public final class SerialInputData extends ShowInput<List<SerialInputData>, List
         List<SerialInputData> SelectedSeriesNotGraded = new ArrayList<SerialInputData>();
         for (int i = 0; i < series.size(); i++) {
             SerialInputData show = series.get(i);
-            if (Graded &&
-                    show.getGenres().contains(genre) &&
+            if (Graded && show.getGenres().contains(genre) &&
                     year != null &&
                     show.getYear() == Integer.parseInt(year)) {
                 SelectedSeriesGraded.add(show);
             }
-            if (show.getGenres().contains(genre) &&
-                    year != null &&
+            if (year != null && show.getGenres().contains(genre) &&
                     show.getYear() == Integer.parseInt(year)) {
                 SelectedSeriesNotGraded.add(show);
             }
@@ -125,7 +148,7 @@ public final class SerialInputData extends ShowInput<List<SerialInputData>, List
             if (views && series.get(i).getNrViews() == 0) {
                 continue;
             }
-            else {
+            else if (series.get(i).getNrappearances() != 0) {
                 names.add(series.get(i).getTitle());
             }
         }
@@ -196,6 +219,33 @@ public final class SerialInputData extends ShowInput<List<SerialInputData>, List
 
         if (order.equals("desc")) {
             Collections.reverse(series);
+        }
+    }
+    @Override
+    public String FindFirstUnseen(List<SerialInputData> series, UserInputData user, String PopularGenre) {
+        String title = null;
+        for (SerialInputData show: series) {
+            if (show.CheckGenre(show, PopularGenre)) {
+                if (user.CheckSeen(user.getHistory(), show.getTitle())) {
+                    continue;
+                }
+                else if (show != null) {
+                    title = show.getTitle();
+                    return title;
+                }
+            }
+        }
+
+        return title;
+    }
+
+    /**
+     * Mapping series into FavoriteTracker with default value 0.
+     */
+    public static void MoviesMapping(Map<String, Integer> FavoriteTracker,
+                                     List<SerialInputData> series) {
+        for (SerialInputData show: series) {
+            FavoriteTracker.put(show.getTitle(), 0);
         }
     }
 

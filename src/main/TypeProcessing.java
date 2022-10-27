@@ -23,7 +23,7 @@ public class TypeProcessing {
                 if (user.CheckSeen(history, title)
                         && !user.CheckFavoriteExistence(user.getFavoriteMovies(), title)) {
                     user.AddToFavorites(user.getFavoriteMovies(), title);
-                    confirmation.put("message", "succes -> " + title + " was added as favourite");
+                    confirmation.put("message", "success -> " + title + " was added as favourite");
 
                 } else if (user.CheckSeen(history, title)) {
                     confirmation.put("message", "error -> " + title + " is already in favourite list");
@@ -104,21 +104,46 @@ public class TypeProcessing {
                                                       List<UserInputData> users) {
         JSONObject confirmation = new JSONObject();
         confirmation.put("id", request.getActionId());
+        UserInputData user = UserInputData.getUser(users, request.getUsername());
+        // Checking if the user has the proper subscription to do the recommendation.
+        String result = user.CheckInvalidUser(request, users);
+        if (result != null) {
+            confirmation.put("message", result + "Recommendation cannot be applied!");
+            return confirmation;
+        }
         ArrayList<String> VideosTitles;
         String title;
+
 
         switch (request.getType()) {
             case "best_unseen":
                 title = AllUsersRecommendation.BestUnseenRecommendation(request, movies, users);
-                confirmation.put("message", "BestRatedUnseenRecommendation result: " + title);
+                if (title == null) {
+                    confirmation.put("message", "BestRatedUnseenRecommendation cannot be applied!");
+                }
+                else {
+                    confirmation.put("message", "BestRatedUnseenRecommendation result: " + title);
+                }
                 break;
 
             case "favorite":
-                VideosTitles = null;
+                title = PremiumUsersRecommendation.FavoriteRecommendation(request, movies, users, series);
+                if (title == null) {
+                    confirmation.put("message", "FavoriteRecommendation cannot be applied!");
+                }
+                else {
+                    confirmation.put("message", "FavoriteRecommendation result: " + title);
+                }
                 break;
 
             case "popular":
-                VideosTitles = null;
+                title = PremiumUsersRecommendation.PopularRecommendation(request, movies, users, series);
+                if (title == null) {
+                    confirmation.put("message", "PopularRecommendation cannot be applied!");
+                }
+                else {
+                    confirmation.put("message", "PopularRecommendation result: " + title);
+                }
                 break;
 
             case "search":
@@ -127,7 +152,12 @@ public class TypeProcessing {
 
             case "standard":
                 title = AllUsersRecommendation.StandardRecommendation(request, movies, users);
-                confirmation.put("message", "StandardRecommendation result: " + title);
+                if (title == null) {
+                    confirmation.put("message", "StandardRecommendation cannot be applied!");
+                }
+                else {
+                    confirmation.put("message", "StandardRecommendation result: " + title);
+                }
                 break;
         }
 

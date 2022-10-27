@@ -1,8 +1,6 @@
 package fileio;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Information about an action, retrieved from parsing the input test files
@@ -168,6 +166,19 @@ public final class ActionInputData {
 
     public List<List<String>> getFilters() {
         return filters;
+    }
+
+    /**
+     * Receives a Map and returns a sorted LinkedHashMap
+     */
+    public static LinkedHashMap<String, Integer>  SortMap(Map<String, Integer> ViewsTracker) {
+        LinkedHashMap<String, Integer> SortedViewsTracker = new LinkedHashMap<>();
+        ViewsTracker.entrySet() // Sorting genres by nr of views.
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEachOrdered(x -> SortedViewsTracker.put(x.getKey(), x.getValue()));
+
+        return SortedViewsTracker;
     }
 
     @Override

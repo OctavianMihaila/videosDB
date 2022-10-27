@@ -7,7 +7,8 @@ import java.util.*;
  * <p>
  * DO NOT MODIFY
  */
-public final class MovieInputData extends ShowInput<List<MovieInputData>, List<UserInputData>, String> {
+public final class MovieInputData extends ShowInput<List<MovieInputData>, List<UserInputData>,
+                                                    String, MovieInputData, UserInputData> {
     /**
      * Duration in minutes of a season
      */
@@ -28,6 +29,43 @@ public final class MovieInputData extends ShowInput<List<MovieInputData>, List<U
 
     public int getDuration() {
         return duration;
+    }
+
+    /**
+     * Searching for a movie with a specific title.
+     */
+    public MovieInputData getMovie(String title, List<MovieInputData> movies) {
+        for (MovieInputData movie: movies) {
+            if (movie.getTitle().equals(title)) {
+                return movie;
+            }
+        }
+
+        return null;
+    }
+    @Override
+    public MovieInputData getVideo(String title, List<MovieInputData> movies) {
+        for (MovieInputData movie: movies) {
+            if (movie.getTitle().equals(title)) {
+                return movie;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Checking if a movie has genre in its list of genres
+     */
+    public boolean CheckGenre(MovieInputData movie, String genre) {
+        ArrayList<String> MovieGenres = movie.getGenres();
+        for (String MovieGenre: MovieGenres) {
+            if (MovieGenre.equals(genre)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static MovieInputData FindMovie(List<MovieInputData> movies, String title) {
@@ -105,7 +143,7 @@ public final class MovieInputData extends ShowInput<List<MovieInputData>, List<U
             if (views && movies.get(i).getNrViews() == 0) {
                 continue;
             }
-            else {
+            else { // Possible problem, check if NrApperances == 0.
                 names.add(movies.get(i).getTitle());
             }
         }
@@ -168,6 +206,70 @@ public final class MovieInputData extends ShowInput<List<MovieInputData>, List<U
 
         if (order.equals("desc")) {
             Collections.reverse(movies);
+        }
+    }
+
+    /**
+     * Looking for the first movie that has the Popular genre
+     * but does not appear in the user's history.
+     */
+    @Override
+    public String FindFirstUnseen(List<MovieInputData> movies, UserInputData user, String PopularGenre) {
+        String title = null;
+        for (MovieInputData movie: movies) {
+            if (movie.CheckGenre(movie, PopularGenre)) {
+                if (user.CheckSeen(user.getHistory(), movie.getTitle())) {
+                    continue;
+                }
+                else if (movie != null) {
+                    title = movie.getTitle();
+                    return title;
+                }
+            }
+        }
+
+        return title;
+    }
+
+    /**
+     * Returns the first unseen movie/show from the most popular genre.
+     * This is done recurisively by checking every genre from SortedViewsTracker
+     * If cannot find a movie/show from the most popular genre it goes on to the 2nd most popular.
+     */
+    public static String FindMostPopular(ActionInputData request, List<UserInputData> users,
+                                         List<MovieInputData> movies, List<SerialInputData> shows,
+                                         LinkedHashMap<String, Integer> SortedViewsTracker) {
+        String title = null;
+        String username = request.getUsername();
+        UserInputData user = UserInputData.getUser(users, username);
+
+        if (SortedViewsTracker.isEmpty()) {
+            return null;
+        }
+        String PopularGenre = SortedViewsTracker.entrySet().iterator().next().getKey();
+
+        /* Looking for a movie/show that has the Popular
+        genre but does not appear in the user's history.*/
+        title = movies.get(0).FindFirstUnseen(movies, user, PopularGenre);
+        if (title == null) { // if cannot find in movies then search through shows.
+            title = shows.get(0).FindFirstUnseen(shows, user, PopularGenre);
+        }
+        if (title != null) {
+            return title;
+        }
+        SortedViewsTracker.remove(PopularGenre);
+        title = FindMostPopular(request, users, movies, shows, SortedViewsTracker);
+
+        return title;
+    }
+
+    /**
+     * Mapping movies into FavoriteTracker with default value 0.
+     */
+    public static void MoviesMapping(Map<String, Integer> FavoriteTracker,
+                                     List<MovieInputData> movies) {
+        for (MovieInputData movie: movies) {
+            FavoriteTracker.put(movie.getTitle(), 0);
         }
     }
 

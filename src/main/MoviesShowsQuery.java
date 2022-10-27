@@ -7,7 +7,8 @@ import java.util.List;
 
 public class MoviesShowsQuery {
     public static ArrayList<String> CriteriaProcessingMovies(ActionInputData request,
-                                                             List<MovieInputData> movies, List<UserInputData> users) {
+                                                             List<MovieInputData> movies,
+                                                             List<UserInputData> users) {
         ArrayList<String> MovieNames = new ArrayList<String>();
         List<MovieInputData> SortedMovies;
         List<MovieInputData> SelectedMovies;
@@ -34,7 +35,6 @@ public class MoviesShowsQuery {
                             request.getFilters().get(1).get(0), true);
                     instance.CalculateNrappearances(movies, users);
                     instance.SortByNrAppearances(movies, request.getSortType());
-
                     MovieNames = MovieInputData.getNames(movies, request.getNumber(), false);
                 }
 
@@ -65,7 +65,8 @@ public class MoviesShowsQuery {
     }
 
     public static ArrayList<String> CriteriaProcessingShows(ActionInputData request,
-                                                            List<SerialInputData> series, List<UserInputData> users) {
+                                                            List<SerialInputData> series,
+                                                            List<UserInputData> users) {
         ArrayList<String> SerialNames = new ArrayList<String>();
         List<SerialInputData> SortedSeries;
 
