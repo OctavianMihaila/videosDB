@@ -230,6 +230,32 @@ public final class UserInputData {
         return FavoritesTracker;
 
     }
+
+    /**
+     * Returns a list that contains the unseen videos from a specific genre
+     */
+    public List<Object> SearchUnseen(List<MovieInputData> movies,
+                                          List<SerialInputData> series,
+                                          UserInputData user,
+                                          String genre) {
+        List<Object> videos = new ArrayList <Object>();
+        for (MovieInputData movie: movies) {
+            if (movie.CheckGenre(movie, genre) &&
+                !user.CheckSeen(this.getHistory(), movie.getTitle())) {
+                videos.add(movie);
+            }
+        }
+
+        for (SerialInputData show: series) {
+            if (show.CheckGenre(show, genre) &&
+                !user.CheckSeen(this.getHistory(), show.getTitle())) {
+                videos.add(show);
+            }
+        }
+
+        return videos;
+
+    }
     @Override
     public String toString() {
         return "UserInputData{" + "username='"

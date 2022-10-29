@@ -1,5 +1,6 @@
 package main;
 
+import com.fasterxml.jackson.databind.deser.impl.ValueInjector;
 import fileio.*;
 import org.json.JSONObject;
 
@@ -147,7 +148,13 @@ public class TypeProcessing {
                 break;
 
             case "search":
-                VideosTitles = null;
+                VideosTitles = PremiumUsersRecommendation.SearchRecommendation(request, movies, users, series);
+                if (VideosTitles == null) {
+                    confirmation.put("message", "SearchRecommendation cannot be applied!");
+                }
+                else {
+                    confirmation.put("message", "SearchRecommendation result: " + VideosTitles);
+                }
                 break;
 
             case "standard":
