@@ -20,13 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * The entry point to this homework. It runs the checker that tests your implentation.
- */
 public final class Main {
-    /**
-     * for coding style
-     */
     private Main() {
     }
 
@@ -114,8 +108,6 @@ public final class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //TODO add here the entry point to your implementation
 
     }
 }
